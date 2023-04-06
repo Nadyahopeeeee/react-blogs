@@ -24,16 +24,16 @@ function App() {
     return posts;
   }, [filter.sort, posts]);
 
-  const createPost = (newPost) => {
-    setPosts([...posts, newPost]);
-    setModal(false);
-  };
-
   const sortedAndSearchedPosts = useMemo(() => {
     return sortedPosts.filter((post) =>
       post.title.toLowerCase().includes(filter.query.toLowerCase()),
     );
   }, [filter.query, sortedPosts]);
+
+  const createPost = (newPost) => {
+    setPosts([...posts, newPost]);
+    setModal(false);
+  };
 
   const removePost = (post) => {
     setPosts(posts.filter((elem) => elem.id !== post.id));
@@ -42,13 +42,13 @@ function App() {
   return (
     <div className="App">
       <MyButton style={{ marginTop: '30px' }} onClick={() => setModal(true)}>
-        Создать пользователя
+        Создать пост
       </MyButton>
       <MyModal visible={modal} setVisible={setModal}>
         <PostForm create={createPost} />
       </MyModal>
-      <hr style={{ margin: '15px' }}></hr>
-      <PostFilter filter={filter} setFilter={setModal} />
+      <hr style={{ margin: '15px 0' }}></hr>
+      <PostFilter filter={filter} setFilter={setFilter} />
       <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты" />
     </div>
   );
