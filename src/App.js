@@ -12,8 +12,6 @@ function App() {
     { id: 3, title: 'Ruby', body: 'description Ruby' },
   ]);
 
-  // const [filter.sort, setfilter.sort] = useState('');
-  // const [searchQuery, setSearchQuery] = useState('');
   const [filter, setFilter] = useState({ sort: '', query: '' });
 
   const sortedPosts = useMemo(() => {
@@ -43,11 +41,7 @@ function App() {
       <PostForm create={createPost} />
       <hr style={{ margin: '15px' }}></hr>
       <PostFilter filter={filter} setFilter={setFilter} />
-      {sortedAndSearchedPosts.length ? (
-        <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты" />
-      ) : (
-        <h2 style={{ textAlign: 'center' }}>Посты не найдены!</h2>
-      )}
+      <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты" />
     </div>
   );
 }
