@@ -1,12 +1,11 @@
-// import React, { useState } from 'react';
 import PostItem from './PostItem';
 
-const PostList = ({ posts, title }) => {
+const PostList = ({ posts, title, remove }) => {
   return (
     <>
       <h1 style={{ textAlign: 'center' }}>{title}</h1>
       {posts.map((post, i) => (
-        <PostItem number={i + 1} post={post} key={post.id} />
+        <PostItem remove={remove} number={i + 1} post={post} key={post.id} />
       ))}
     </>
   );
