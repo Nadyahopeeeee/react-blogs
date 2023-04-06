@@ -1,15 +1,19 @@
 import React from 'react';
+import MyButton from './UI/button/MyButton';
 
-function PostItem({ post }) {
-  console.log(post);
+function PostItem({ post, number }) {
   return (
     <div className="post">
-      <div className="post__content" style={{ display: 'flex' }}>
-        <strong>{post.id}.</strong>
-        <div style={{ marginLeft: '5px' }}>{post.title}</div>
+      <div className="post__content">
+        <div>
+          {' '}
+          <strong>{number}.</strong>
+          {post.title}
+        </div>
+        <div>{post.body}</div>
       </div>
       <div className="post__btns">
-        <button>Удалить</button>
+        <MyButton>Удалить</MyButton>
       </div>
     </div>
   );

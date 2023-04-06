@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './styles/App.css';
 import PostList from './components/PostList';
+import PostForm from './components/PostForm';
 
 function App() {
   const [posts, setPosts] = useState([
@@ -9,16 +10,14 @@ function App() {
     { id: 3, title: 'Javascript3', body: 'description' },
   ]);
 
-  const [posts2, setPosts2] = useState([
-    { id: 1, title: 'Python1', body: 'description' },
-    { id: 2, title: 'Python2', body: 'description' },
-    { id: 3, title: 'Python3', body: 'description' },
-  ]);
+  const createPost = (newPost) => {
+    setPosts([...posts, newPost]);
+  };
 
   return (
     <div className="App">
-      <PostList posts={posts} title="Список постов 1" />
-      <PostList posts={posts2} title="Список постов 2" />
+      <PostForm create={createPost} />
+      <PostList posts={posts} title="Посты про JS" />
     </div>
   );
 }
