@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { usePosts } from './hooks/usePosts';
 import './styles/App.css';
 import PostList from './components/PostList';
@@ -8,17 +7,14 @@ import PostFilter from './components/PostFilter';
 import MyModal from './components/MyModal/MyModal';
 import MyButton from './components/UI/button/MyButton';
 import PostService from './API/PostService';
+import Loader from './components/UI/Loader/Loader';
 
 function App() {
-  const [posts, setPosts] = useState([
-    { id: 1, title: 'Javascript ', body: 'description JS' },
-    { id: 2, title: 'Phyton', body: 'description Phyton' },
-    { id: 3, title: 'Ruby', body: 'description Ruby' },
-  ]);
-
+  const [posts, setPosts] = useState([]);
   const [filter, setFilter] = useState({ sort: '', query: '' });
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
+  const [isPostsLoading, setIsPostsLoading] = useState(false);
 
   useEffect(() => {
     fetchPosts();
@@ -30,8 +26,10 @@ function App() {
   };
 
   async function fetchPosts() {
+    setIsPostsLoading(true);
     const posts = await PostService.getAll();
     setPosts(posts);
+    setIsPostsLoading(false);
   }
 
   // Получаем post из дочернего элемента
@@ -49,7 +47,13 @@ function App() {
       </MyModal>
       <hr style={{ margin: '15px 0' }}></hr>
       <PostFilter filter={filter} setFilter={setFilter} />
-      <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты" />
+      {isPostsLoading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+          <Loader />
+        </div>
+      ) : (
+        <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты" />
+      )}
     </div>
   );
 }
