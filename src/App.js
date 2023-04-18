@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { usePosts } from './hooks/usePosts';
 import './styles/App.css';
 import PostList from './components/PostList';
@@ -18,11 +19,21 @@ function App() {
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
   const createPost = (newPost) => {
     setPosts([...posts, newPost]);
     setModal(false);
   };
 
+  async function fetchPosts() {
+    const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
+    setPosts(response.data);
+  }
+
+  // Получаем post из дочернего элемента
   const removePost = (post) => {
     setPosts(posts.filter((elem) => elem.id !== post.id));
   };
@@ -30,7 +41,7 @@ function App() {
   return (
     <div className="App">
       <MyButton style={{ marginTop: '30px' }} onClick={() => setModal(true)}>
-        Создать пост
+        Создать пользователя
       </MyButton>
       <MyModal visible={modal} setVisible={setModal}>
         <PostForm create={createPost} />
