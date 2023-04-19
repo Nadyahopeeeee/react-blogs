@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { usePosts } from './hooks/usePosts';
 import './styles/App.css';
+
+import { usePosts } from './hooks/usePosts';
+import { useFetching } from './hooks/useFetching';
 import PostList from './components/PostList';
 import PostForm from './components/PostForm';
 import PostFilter from './components/PostFilter';
-import MyModal from './components/MyModal/MyModal';
+import MyModal from './components/UI/MyModal/MyModal';
 import MyButton from './components/UI/button/MyButton';
 import PostService from './API/PostService';
 import Loader from './components/UI/Loader/Loader';
@@ -14,9 +16,14 @@ function App() {
   const [filter, setFilter] = useState({ sort: '', query: '' });
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
-  const [isPostsLoading, setIsPostsLoading] = useState(false);
+
+  const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
+    const posts = await PostService.getAll();
+    setPosts(posts);
+  });
 
   useEffect(() => {
+    console.log(fetchPosts);
     fetchPosts();
   }, []);
 
@@ -24,13 +31,6 @@ function App() {
     setPosts([...posts, newPost]);
     setModal(false);
   };
-
-  async function fetchPosts() {
-    setIsPostsLoading(true);
-    const posts = await PostService.getAll();
-    setPosts(posts);
-    setIsPostsLoading(false);
-  }
 
   // Получаем post из дочернего элемента
   const removePost = (post) => {
@@ -54,6 +54,7 @@ function App() {
       ) : (
         <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты" />
       )}
+      {postError && <h2>Произошла ошибка {postError}</h2>}
     </div>
   );
 }

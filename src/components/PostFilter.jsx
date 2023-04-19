@@ -1,6 +1,6 @@
 import React from 'react';
 import MyInput from './UI/input/MyInput';
-import MySelect from './MySelect';
+import MySelect from './UI/select/MySelect';
 
 export default function PostFilter({ filter, setFilter }) {
   return (
