@@ -8,7 +8,7 @@ function PostItem({ post, number, remove }) {
         <div>
           {' '}
           <strong>
-            {number}. {post.title}
+            {post.id}. {post.title}
           </strong>
         </div>
         <div>{post.body}</div>
