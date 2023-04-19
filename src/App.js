@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './styles/App.css';
 
 import { usePosts } from './hooks/usePosts';
 import { useFetching } from './hooks/useFetching';
+import { getPagesCount, getPagesArray } from './utils/pages';
 import PostList from './components/PostList';
 import PostForm from './components/PostForm';
 import PostFilter from './components/PostFilter';
@@ -15,15 +16,21 @@ function App() {
   const [posts, setPosts] = useState([]);
   const [filter, setFilter] = useState({ sort: '', query: '' });
   const [modal, setModal] = useState(false);
+  const [totalPages, setTotalPages] = useState(0);
+  const [limit, setLimit] = useState(10);
+  const [page, setPage] = useState(1);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
+  let pagesArray = getPagesArray(totalPages);
+  console.log('yo', pagesArray);
 
   const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
-    const posts = await PostService.getAll();
-    setPosts(posts);
+    const response = await PostService.getAll(limit, page);
+    setPosts(response.data);
+    const totalCount = response.headers['x-total-count'];
+    setTotalPages(getPagesCount(totalCount, limit));
   });
 
   useEffect(() => {
-    console.log(fetchPosts);
     fetchPosts();
   }, []);
 
@@ -55,6 +62,18 @@ function App() {
         <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Посты" />
       )}
       {postError && <h2>Произошла ошибка {postError}</h2>}
+      <div className="page__wrapper">
+        {' '}
+        {pagesArray.map((p) => (
+          <span
+            onClick={() => setPage(p)}
+            className={p === page ? 'page page__current' : 'page'}
+            key={p}
+          >
+            {p}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
